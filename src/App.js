@@ -67,6 +67,10 @@ class App extends Component {
             game_over: false,
             win: false,
             lose: false,
+	    userPath: [],
+	    dijkstraPath: [],
+	    currentNodeId: 2,
+            lastSelectedEdgeId: -1,
         };
 
         // generate graph and run djikstra to set solutionEdges global variable
@@ -165,12 +169,25 @@ class App extends Component {
 
 
     handleClick = id => {
-        console.log(this.network)
-        this.network.clustering.updateEdge(id, { color: 'red' })
-
-        this.setState({
-            weight: this.e[id],
-        })
+	    console.log(id)
+	    let from = this.graph.edges[id-1].from;
+	    let to = this.graph.edges[id-1].to;
+	    if((from === this.state.currentNodeId
+		    || to === this.state.currentNodeId)
+		    && this.state.lastSelectedEdgeId !== id){
+		this.network.clustering.updateEdge(id,{color: 'red'})
+		this.state.userPath.push({from : this.graph.edges[id-1].from, to : this.graph.edges[id-1].to})
+		    //console.log(this.state.userPath);
+		    //console.log(this.state.weight);
+		let nodeId = (from === this.state.currentNodeId) ? to : from;
+		console.log(nodeId)
+		console.log(this.state.currentNodeId + " state ");
+		this.setState({
+			weight: this.state.weight - this.e[id],
+			currentNodeId: nodeId,
+			lastSelectedEdgeId: id,
+		})
+	    }
     }
 
 
