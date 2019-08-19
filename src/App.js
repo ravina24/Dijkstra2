@@ -10,6 +10,10 @@ class App extends Component {
     SOLUTION_EDGE_WEIGHT = '5';
     GENERATED_GRAPH_NUMBER_OF_NODES = 10;
     GENERATE_CUSTOM_GRAPH = false;
+    GENERATED_GRAPH_CONNECTION_PROBABILITY = 0.3; // the actual probability is a bit higher than this.
+    /*
+      Actual probabiilty of connection between two nodes: 100% if their indices are adjacent, and 2*probability - probability*2 if not
+    */
     GENREATED_GRAPH_MAX_EDGE_WEIGHT = 15;
 
     // "Global" variables
@@ -118,7 +122,14 @@ class App extends Component {
 
       // TODO
       // add extra edges to spice things up
+      // if a node is not connected to another node, connect them with random probability
+      for (i = 0; i < nodes.length; i++){
+          const rng = Math.random(); // [0,1)
+          // add edge if connection probability matches
+          if (rng < this.GENERATED_GRAPH_CONNECTION_PROBABILITY ){
 
+          }
+      }
 
       return edges;
     }
