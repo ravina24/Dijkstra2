@@ -174,9 +174,17 @@ class App extends Component {
         }
     }
 
+    copyEdges(edges){
+      const copy = [];
+      var edgeId = this.graph.edges.length;
+      edges.forEach(e => copy.push({to: e.to, from: e.from, label: e.label, id: edgeId++}));
+      return copy;
+    }
+
     runDijkstra() {
-        this.solutionEdges = dijkstra(this.graph, this.graph.nodes[0], this.graph.nodes[4]);
-	    console.log(this.solutionEdges)
+        const solution = dijkstra(this.graph, this.graph.nodes[0], this.graph.nodes[4]);
+        this.solutionEdges = copyEdges(solution);
+	      console.log(this.solutionEdges)
 
         // Calculate total points (optimal path total weight)
         var sum = 0;
@@ -188,6 +196,7 @@ class App extends Component {
         this.solutionEdges.forEach(edge => edge.color = this.SOLUTION_EDGE_COLOR);
         // make the edges a bit smaller
         this.solutionEdges.forEach(edge => edge.width = this.SOLUTION_EDGE_WEIGHT);
+        
     }
 
 
