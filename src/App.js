@@ -122,9 +122,9 @@ class App extends Component {
         return false;
       }
       var canAdd = true;
-	var i;
+	    var i;
       for (i = 0; i < edges.length; i++){
-        if ((edges[i].from == id1 && edges[i].to == id2) || (edges[i].from == id2 && edges[i].to == id1)){
+        if ((edges[i].from === id1 && edges[i].to === id2) || (edges[i].from === id2 && edges[i].to === id1)){
           canAdd = false;
           break;
         }
@@ -183,7 +183,7 @@ class App extends Component {
 
     runDijkstra() {
         const solution = dijkstra(this.graph, this.graph.nodes[0], this.graph.nodes[4]);
-        this.solutionEdges = copyEdges(solution);
+        this.solutionEdges = this.copyEdges(solution);
 	      console.log(this.solutionEdges)
 
         // Calculate total points (optimal path total weight)
