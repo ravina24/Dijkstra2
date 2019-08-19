@@ -9,6 +9,7 @@ class App extends Component {
     SOLUTION_EDGE_COLOR = 'purple';
     SOLUTION_EDGE_WEIGHT = '5';
     GENERATED_GRAPH_NUMBER_OF_NODES = 10;
+    GENERATE_CUSTOM_GRAPH = false;
 
     // "Global" variables
 
@@ -25,7 +26,7 @@ class App extends Component {
         edges: [{ from: 1, to: 2, label: 5, id: 1 }, { from: 1, to: 3, label: 10, id: 2 }, { from: 2, to: 4, label: 8, id: 3 }, { from: 2, to: 5, label: 2, id: 4 }]
     };
 
-    e = [0, 5, 3, 8, 2]
+    e = { 1: 5, 2: 3, 3: 8, 4: 2};
 
     options = {
         height: "600",
@@ -63,7 +64,7 @@ class App extends Component {
             lose: false,
         };
 
-        // generate graph and run djikstra to set solution_edges global variable
+        // generate graph and run djikstra to set solutionEdges global variable
         generateGraph();
         runDjikstra();
 
@@ -73,29 +74,53 @@ class App extends Component {
         this.handleLose = this.handleLose.bind(this);
     }
 
+    // Used by generateNodes. Each node's ID matches its label.
+    generateNode(id){
+      return { id: id, label: id.toString() };
+    }
+
     // Used by generateGraph
     generateNodes(){
       const num = this.GENERATED_GRAPH_NUMBER_OF_NODES;
-
+      const nodes = [];
+      var i;
+      for (i = 0; i < num; i++){
+        nodes.push(generateNode(i));
+      }
+      return nodes;
     }
 
     // Used by generateGraph
     generateEdges(nodes){
 
+      // TODO!!
+
+      // connect the nodes so the graph is connected
+
+
+      // add extra edges to spice things up
+
+
     }
 
     generateGraph() {
-        // TODO: GENERATE RANDOM GRAPH
         const generatedNodes = generateNodes();
+        const generatedEdges = generateEdges(generatedNodes);
 
-        this.graph = {
+        // Set the graph
+        if (GENERATE_CUSTOM_GRAPH){
+          this.graph = {
             nodes: generatedNodes,
-            edges: generateEdges(generatedNodes)
-        };
+            edges: generatedEdges
+          };
+        }
     }
 
     runDjikstra() {
         this.solutionEdges = djikstra(this.graph);
+
+        // Calculate total points (optimal path total weight)
+        var sum = 0;
         this.solutionEdges.forEach(edge => sum += edge.weight);
         this.setState({weight: sum});
 
@@ -124,6 +149,9 @@ class App extends Component {
     };
 
     handleWin() {
+      // Optional:
+      alert("you won!");
+      
         this.setState({
             gameOver = true,
             win = true,
@@ -132,6 +160,9 @@ class App extends Component {
     }
 
     handleLose() {
+      // Optional:
+      alert("you lose!");
+
         this.setState({
             gameOver = true,
             win = false,
