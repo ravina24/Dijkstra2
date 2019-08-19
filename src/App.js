@@ -10,6 +10,7 @@ class App extends Component {
     SOLUTION_EDGE_WEIGHT = '5';
     GENERATED_GRAPH_NUMBER_OF_NODES = 10;
     GENERATE_CUSTOM_GRAPH = false;
+    GENREATED_GRAPH_MAX_EDGE_WEIGHT = 15;
 
     // "Global" variables
 
@@ -94,17 +95,36 @@ class App extends Component {
       return nodes;
     }
 
+    // used by generateEdge to generate a random edge weight in [1 .. GENERATED_GRAPH_MAX_EDGE_WEIGHT]
+    generateEdgeWeight(){
+      return Math.floor(Math.random() * this.GENERATED_GRAPH_MAX_EDGE_WEIGHT) + 1;
+    }
+
+    // Used by generateEdges. SIDE EFFECT: Updates 'e' dictionary
+    generateEdge(id1, id2, edgeId){
+      const weight = this.generateEdgeWeight();
+      // Update 'e' dictionary
+      this.e[edgeId] = weight;
+
+      return { from: id1, to: id2, label: weight, id: edgeId} 
+    }
+
     // Used by generateGraph
     generateEdges(nodes){
-
-      // TODO!!
-
+      const edges = [];
       // connect the nodes so the graph is connected
+      // Go from 1 -> end in a loop
+      var i;
+      var edgeId = 1;
+      for (i = 0; i < nodes.length-1; i++, edgeId++){
+          edges.push(this.generateEdge(i, i+1, edgeId));
+      }
 
-
+      // TODO
       // add extra edges to spice things up
 
 
+      return edges;
     }
 
     generateGraph() {
@@ -210,6 +230,7 @@ class App extends Component {
         // Display it
         return <div>
             <h1>You lost!</h1>
+            <h3>You would've won if you went with the {this.SOLUTION_EDGE_COLOR} path:</h3>
             <Graph getNetwork={this.setNetworkInstance} graph={this.graph} options={this.options} events={this.events}></Graph>
         </div>
     }
