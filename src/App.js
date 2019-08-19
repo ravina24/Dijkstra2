@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import Graph from 'react-graph-vis';
+import dijkstra from "./dijkstra"
 
 class App extends Component {
 
@@ -25,11 +26,11 @@ class App extends Component {
 
     graph = {
         nodes: [
-            { id: 1, label: 'a' },
-            { id: 2, label: 'b' },
-            { id: 3, label: 'c' },
-            { id: 4, label: 'd' },
-            { id: 5, label: 'e' }
+            { id: 1, label: '1' },
+            { id: 2, label: '2' },
+            { id: 3, label: '3' },
+            { id: 4, label: '4' },
+            { id: 5, label: '5' }
         ],
         edges: [{ from: 1, to: 2, label: 5, id: 1 }, { from: 1, to: 3, label: 10, id: 2 }, { from: 2, to: 4, label: 8, id: 3 }, { from: 2, to: 5, label: 2, id: 4 }]
     };
@@ -47,7 +48,7 @@ class App extends Component {
         edges: {
             color: 'green',
             arrows: { to: { enabled: false } },
-            width: "10"
+            width: 10
         }
     };
 
@@ -121,9 +122,9 @@ class App extends Component {
         return false;
       }
       var canAdd = true;
-      var i;
+	var i;
       for (i = 0; i < edges.length; i++){
-        if ((edges.from == id1 && edges.to == id2) || (edges.from == id2 && edges.to == id1)){
+        if ((edges[i].from == id1 && edges[i].to == id2) || (edges[i].from == id2 && edges[i].to == id1)){
           canAdd = false;
           break;
         }
@@ -174,12 +175,13 @@ class App extends Component {
     }
 
     runDijkstra() {
-        this.solutionEdges = dijkstra(this.graph);
+        this.solutionEdges = dijkstra(this.graph, this.graph.nodes[0], this.graph.nodes[4]);
+	    console.log(this.solutionEdges)
 
         // Calculate total points (optimal path total weight)
         var sum = 0;
-        this.solutionEdges.forEach(edge => sum += edge.weight);
-        this.setState({weight: sum});
+        this.solutionEdges.forEach(edge => sum += edge.label);
+        this.state.weight = sum;
 
 
         // set the edges' color
