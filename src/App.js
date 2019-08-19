@@ -126,6 +126,7 @@ class App extends Component {
       for (i = 0; i < edges.length; i++){
         if ((edges[i].from === id1 && edges[i].to === id2) || (edges[i].from === id2 && edges[i].to === id1)){
           canAdd = false;
+          break;
         }
       }
       return canAdd;
