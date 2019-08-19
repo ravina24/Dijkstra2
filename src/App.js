@@ -65,8 +65,8 @@ class App extends Component {
         };
 
         // generate graph and run djikstra to set solutionEdges global variable
-        generateGraph();
-        runDjikstra();
+        this.generateGraph();
+        this.runDjikstra();
 
         this.setNetworkInstance = this.setNetworkInstance.bind(this)
         this.handleClick = this.handleClick.bind(this);
@@ -85,7 +85,7 @@ class App extends Component {
       const nodes = [];
       var i;
       for (i = 0; i < num; i++){
-        nodes.push(generateNode(i));
+        nodes.push(this.generateNode(i));
       }
       return nodes;
     }
@@ -104,11 +104,11 @@ class App extends Component {
     }
 
     generateGraph() {
-        const generatedNodes = generateNodes();
-        const generatedEdges = generateEdges(generatedNodes);
+        const generatedNodes = this.generateNodes();
+        const generatedEdges = this.generateEdges(generatedNodes);
 
         // Set the graph
-        if (GENERATE_CUSTOM_GRAPH){
+        if (this.GENERATE_CUSTOM_GRAPH){
           this.graph = {
             nodes: generatedNodes,
             edges: generatedEdges
@@ -126,9 +126,9 @@ class App extends Component {
 
 
         // set the edges' color
-        this.solutionEdges.forEach(edge => edge.color = SOLUTION_EDGE_COLOR);
+        this.solutionEdges.forEach(edge => edge.color = this.SOLUTION_EDGE_COLOR);
         // make the edges a bit smaller
-        this.solutionEdges.forEach(edge => edge.width = SOLUTION_EDGE_WEIGHT);
+        this.solutionEdges.forEach(edge => edge.width = this.SOLUTION_EDGE_WEIGHT);
     }
 
 
@@ -153,9 +153,9 @@ class App extends Component {
       alert("you won!");
       
         this.setState({
-            gameOver = true,
-            win = true,
-            lose = false
+            gameOver: true,
+            win: true,
+            lose: false
         })
     }
 
@@ -164,18 +164,18 @@ class App extends Component {
       alert("you lose!");
 
         this.setState({
-            gameOver = true,
-            win = false,
-            lose = true
+            gameOver: true,
+            win: false,
+            lose: true
         })
     }
 
     // Unused atm
     handleRestart() {
         this.setState({
-            gameOver = false,
-            win = false,
-            lose = false
+            gameOver: false,
+            win : false,
+            lose : false
         })
     }
 
@@ -202,9 +202,9 @@ class App extends Component {
         // game is over:
         if (this.state.gameOver) {
             if (this.state.win) {
-                return winScreen();
+                return this.winScreen();
             } else if (this.state.lose) {
-                return loseScreen();
+                return this.loseScreen();
             } else {
                 throw "PROBLEM: state.game_over is TRUE but both state.win and state.lose are FALSE!";
             }
