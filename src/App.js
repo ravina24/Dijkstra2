@@ -9,16 +9,19 @@ class App extends Component {
     SOLUTION_EDGE_COLOR = 'purple';
     SOLUTION_EDGE_WEIGHT = '5';
     GENERATED_GRAPH_NUMBER_OF_NODES = 10;
-    GENERATE_CUSTOM_GRAPH = false;
+    GENERATE_CUSTOM_GRAPH = true;
     GENERATED_GRAPH_CONNECTION_PROBABILITY = 0.3; // the actual probability is a bit higher than this.
     /*
       Actual probabiilty of connection between two nodes: 100% if their indices are adjacent, and 2*probability - probability*2 if not
     */
     GENREATED_GRAPH_MAX_EDGE_WEIGHT = 15;
 
+
+
+
     // "Global" variables
 
-    solutionEdges = {}; // from Djikstra algorithm
+    solutionEdges = {}; // from Dijkstra algorithm
 
     graph = {
         nodes: [
@@ -73,9 +76,9 @@ class App extends Component {
             lastSelectedEdgeId: -1,
         };
 
-        // generate graph and run djikstra to set solutionEdges global variable
+        // generate graph and run dijkstra to set solutionEdges global variable
         this.generateGraph();
-        this.runDjikstra();
+        this.runDijkstra();
 
         this.setNetworkInstance = this.setNetworkInstance.bind(this)
         this.handleClick = this.handleClick.bind(this);
@@ -113,25 +116,44 @@ class App extends Component {
       return { from: id1, to: id2, label: weight, id: edgeId} 
     }
 
+    canAddEdge(id1, id2, edges){
+      if (id1 == id2) {
+        return false;
+      }
+      var canAdd = true;
+      var i;
+      for (i = 0; i < edges.length; i++){
+        if ((edges.from == id1 && edges.to == id2) || (edges.from == id2 && edges.to == id1)){
+          canAdd = false;
+          break;
+        }
+      }
+      return canAdd;
+    }
+
     // Used by generateGraph
     generateEdges(nodes){
       const edges = [];
       // connect the nodes so the graph is connected
       // Go from 1 -> end in a loop
       var i;
+      var j;
       var edgeId = 1;
       for (i = 0; i < nodes.length-1; i++, edgeId++){
           edges.push(this.generateEdge(i, i+1, edgeId));
       }
 
-      // TODO
       // add extra edges to spice things up
       // if a node is not connected to another node, connect them with random probability
       for (i = 0; i < nodes.length; i++){
-          const rng = Math.random(); // [0,1)
-          // add edge if connection probability matches
-          if (rng < this.GENERATED_GRAPH_CONNECTION_PROBABILITY ){
-
+          // add edge if the generated number is in range and 
+          for (j = 0; j < nodes.length; j++)
+          if (this.canAddEdge(i, j, edges)){
+            const r = Math.random(); // [0,1)
+            if (r < this.GENERATED_GRAPH_CONNECTION_PROBABILITY){
+              edges.push(this.generateEdge(i, j, edgeId));
+              edgeId++;
+            }
           }
       }
 
@@ -151,8 +173,8 @@ class App extends Component {
         }
     }
 
-    runDjikstra() {
-        this.solutionEdges = djikstra(this.graph);
+    runDijkstra() {
+        this.solutionEdges = dijkstra(this.graph);
 
         // Calculate total points (optimal path total weight)
         var sum = 0;
