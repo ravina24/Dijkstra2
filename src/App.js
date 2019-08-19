@@ -35,7 +35,7 @@ class App extends Component {
         edges: [{ from: 1, to: 2, label: 5, id: 1 }, { from: 1, to: 3, label: 10, id: 2 }, { from: 2, to: 4, label: 8, id: 3 }, { from: 2, to: 5, label: 2, id: 4 }]
     };
 
-    e = { 1: 5, 2: 3, 3: 8, 4: 2};
+    e = { 1: 5, 2: 10, 3: 8, 4: 2};
 
     options = {
         height: "600",
@@ -118,6 +118,7 @@ class App extends Component {
     }
 
     canAddEdge(id1, id2, edges){
+      // DEBUG:
       if (id1 == id2) {
         return false;
       }
