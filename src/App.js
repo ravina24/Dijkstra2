@@ -10,7 +10,7 @@ class App extends Component {
     SOLUTION_EDGE_COLOR = 'purple';
     SOLUTION_EDGE_WEIGHT = '5';
     GENERATED_GRAPH_NUMBER_OF_NODES = 10;
-    GENERATE_CUSTOM_GRAPH = true;
+    GENERATE_CUSTOM_GRAPH = false;
     GENERATED_GRAPH_CONNECTION_PROBABILITY = 0.3; // the actual probability is a bit higher than this.
     /*
       Actual probabiilty of connection between two nodes: 100% if their indices are adjacent, and 2*probability - probability*2 if not
@@ -73,7 +73,7 @@ class App extends Component {
             lose: false,
 	    userPath: [],
 	    dijkstraPath: [],
-	    currentNodeId: 2,
+	    currentNodeId: 1,
             lastSelectedEdgeId: -1,
         };
 
@@ -205,22 +205,28 @@ class App extends Component {
 	    console.log(id)
 	    let from = this.graph.edges[id-1].from;
 	    let to = this.graph.edges[id-1].to;
-	    if((from === this.state.currentNodeId
+	    if((from === this.state.currentNodeId 
 		    || to === this.state.currentNodeId)
 		    && this.state.lastSelectedEdgeId !== id){
-		this.network.clustering.updateEdge(id,{color: 'red'})
-		this.state.userPath.push({from : this.graph.edges[id-1].from, to : this.graph.edges[id-1].to})
-		    //console.log(this.state.userPath);
-		    //console.log(this.state.weight);
-		let nodeId = (from === this.state.currentNodeId) ? to : from;
-		console.log(nodeId)
-		console.log(this.state.currentNodeId + " state ");
-		this.setState({
-			weight: this.state.weight - this.e[id],
-			currentNodeId: nodeId,
-			lastSelectedEdgeId: id,
-		})
-	    }
+      		this.network.clustering.updateEdge(id,{color: 'red'})
+      		this.state.userPath.push({from : this.graph.edges[id-1].from, to : this.graph.edges[id-1].to})
+      		    //console.log(this.state.userPath);
+      		    //console.log(this.state.weight);
+      		let nodeId = (from === this.state.currentNodeId) ? to : from;
+      		console.log(nodeId)
+      		console.log(this.state.currentNodeId + " state ");
+      		this.setState({
+      			weight: this.state.weight - this.graph.edges[id-1].label,
+      			currentNodeId: nodeId,
+      			lastSelectedEdgeId: id,
+      		})
+      }
+
+      if(this.state.weight == 0) {
+        this.handleWin();
+      } else if(this.state.weight < 0) {
+        this.handleLose();
+      }
     }
 
 
