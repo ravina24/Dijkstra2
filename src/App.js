@@ -213,6 +213,7 @@ class App extends Component {
         // Display it
         return <div>
             <h1>You lost!</h1>
+            <h3>You would've won if you went with the {this.SOLUTION_EDGE_COLOR} path:</h3>
             <Graph getNetwork={this.setNetworkInstance} graph={this.graph} options={this.options} events={this.events}></Graph>
         </div>
     }
