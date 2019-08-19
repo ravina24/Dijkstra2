@@ -35,7 +35,6 @@ class App extends Component {
         edges: [{ from: 1, to: 2, label: 5, id: 1 }, { from: 1, to: 3, label: 10, id: 2 }, { from: 2, to: 4, label: 8, id: 3 }, { from: 2, to: 5, label: 2, id: 4 }]
     };
 
-    e = { 1: 5, 2: 10, 3: 8, 4: 2};
 
     options = {
         height: "600",
@@ -111,9 +110,6 @@ class App extends Component {
     // Used by generateEdges. SIDE EFFECT: Updates 'e' dictionary
     generateEdge(id1, id2, edgeId){
       const weight = this.generateEdgeWeight();
-      // Update 'e' dictionary
-      this.e[edgeId] = weight;
-
       return { from: id1, to: id2, label: weight, id: edgeId} 
     }
 
