@@ -11,11 +11,11 @@ class App extends Component {
     SOLUTION_EDGE_WEIGHT = '5';
     GENERATED_GRAPH_NUMBER_OF_NODES = 10;
     GENERATE_CUSTOM_GRAPH = true;
-    GENERATED_GRAPH_CONNECTION_PROBABILITY = 0.3; // the actual probability is a bit higher than this.
+    GENERATED_GRAPH_CONNECTION_PROBABILITY = 0.12; // the actual probability is a bit higher than this.
     /*
       Actual probabiilty of connection between two nodes: 100% if their indices are adjacent, and 2*probability - probability*2 if not
     */
-    GENREATED_GRAPH_MAX_EDGE_WEIGHT = 15;
+    GENERATED_GRAPH_MAX_EDGE_WEIGHT = 15;
 
 
 
@@ -38,16 +38,16 @@ class App extends Component {
 
     options = {
         height: "600",
-        width: "600",
+        width: "1000",
         interaction: { dragNodes: false, dragView: false, zoomView: false, selectable: false },
         physics: { enabled: false },
         layout: {
-            hierarchical: true
+            hierarchical: false
         },
         edges: {
             color: 'green',
             arrows: { to: { enabled: false } },
-            width: 10
+            width: 7
         }
     };
 
@@ -107,10 +107,13 @@ class App extends Component {
       return Math.floor(Math.random() * this.GENERATED_GRAPH_MAX_EDGE_WEIGHT) + 1;
     }
 
-    // Used by generateEdges. SIDE EFFECT: Updates 'e' dictionary
+    // Used by generateEdges
     generateEdge(id1, id2, edgeId){
       const weight = this.generateEdgeWeight();
-      return { from: id1, to: id2, label: weight, id: edgeId} 
+      console.log("WEIGHT:" + weight)
+      const edge = { from: id1, to: id2, label: weight, id: edgeId};
+      console.log("GENERATED EDGE: " + edge.toString());
+      return edge;
     }
 
     canAddEdge(id1, id2, edges){
@@ -174,7 +177,7 @@ class App extends Component {
     copyEdges(edges){
       const copy = [];
       var edgeId = this.graph.edges.length;
-      edges.forEach(e => copy.push({to: e.to, from: e.from, label: e.label, id: edgeId++}));
+      edges.forEach(e => copy.push({to: e.to, from: e.from, label: e.label, id: ++edgeId}));
       return copy;
     }
 
@@ -188,12 +191,10 @@ class App extends Component {
         this.solutionEdges.forEach(edge => sum += edge.label);
         this.state.weight = sum;
 
-
         // set the edges' color
         this.solutionEdges.forEach(edge => edge.color = this.SOLUTION_EDGE_COLOR);
         // make the edges a bit smaller
         this.solutionEdges.forEach(edge => edge.width = this.SOLUTION_EDGE_WEIGHT);
-        
     }
 
 
