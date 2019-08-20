@@ -183,9 +183,8 @@ class App extends Component {
 
     runDijkstra() {
         const solution = dijkstra(this.graph, this.graph.nodes[0], this.graph.nodes[4]);
-        this.solutionEdges = solution;
-	      console.log(this.solutionEdges)
-
+        this.solutionEdges = copyEdges(solution);
+	      
         // Calculate total points (optimal path total weight)
         var sum = 0;
         this.solutionEdges.forEach(edge => sum += edge.label);
