@@ -72,7 +72,7 @@ class App extends Component {
             lose: false,
 	    userPath: [],
 	    dijkstraPath: [],
-	    currentNodeId: 2,
+	    currentNodeId: 1,
             lastSelectedEdgeId: -1,
         };
 
@@ -183,7 +183,7 @@ class App extends Component {
 
     runDijkstra() {
         const solution = dijkstra(this.graph, this.graph.nodes[0], this.graph.nodes[4]);
-        this.solutionEdges = this.copyEdges(solution);
+        this.solutionEdges = solution;
 	      console.log(this.solutionEdges)
 
         // Calculate total points (optimal path total weight)
@@ -203,22 +203,28 @@ class App extends Component {
 	    console.log(id)
 	    let from = this.graph.edges[id-1].from;
 	    let to = this.graph.edges[id-1].to;
-	    if((from === this.state.currentNodeId
+	    if((from === this.state.currentNodeId 
 		    || to === this.state.currentNodeId)
 		    && this.state.lastSelectedEdgeId !== id){
-		this.network.clustering.updateEdge(id,{color: 'red'})
-		this.state.userPath.push({from : this.graph.edges[id-1].from, to : this.graph.edges[id-1].to})
-		    //console.log(this.state.userPath);
-		    //console.log(this.state.weight);
-		let nodeId = (from === this.state.currentNodeId) ? to : from;
-		console.log(nodeId)
-		console.log(this.state.currentNodeId + " state ");
-		this.setState({
-			weight: this.state.weight - this.e[id],
-			currentNodeId: nodeId,
-			lastSelectedEdgeId: id,
-		})
-	    }
+      		this.network.clustering.updateEdge(id,{color: 'red'})
+      		this.state.userPath.push({from : this.graph.edges[id-1].from, to : this.graph.edges[id-1].to})
+      		    //console.log(this.state.userPath);
+      		    //console.log(this.state.weight);
+      		let nodeId = (from === this.state.currentNodeId) ? to : from;
+      		console.log(nodeId)
+      		console.log(this.state.currentNodeId + " state ");
+      		this.setState({
+      			weight: this.state.weight - this.graph.edges[id-1].label,
+      			currentNodeId: nodeId,
+      			lastSelectedEdgeId: id,
+      		})
+      }
+
+      if(this.state.weight == 0) {
+        this.handleWin();
+      } else if(this.state.weight < 0) {
+        this.handleLose();
+      }
     }
 
 
@@ -266,8 +272,10 @@ class App extends Component {
 
     // Displays a losing message, plus algorithm solution
     loseScreen() {
-        // Add the solution's edges to be displayed alongside the user's edges
-        this.graph.edges.concat(this.solutionEdges);
+        // set the solution edges' color
+        this.solutionEdges.forEach(edge => edge.color = this.SOLUTION_EDGE_COLOR);
+        // make the edges a bit smaller
+        this.solutionEdges.forEach(edge => edge.width = this.SOLUTION_EDGE_WEIGHT);
 
         // Display it
         return <div>
