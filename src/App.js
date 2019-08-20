@@ -187,13 +187,6 @@ class App extends Component {
         var sum = 0;
         this.solutionEdges.forEach(edge => sum += edge.label);
         this.state.weight = sum;
-
-
-        // set the edges' color
-        //this.solutionEdges.forEach(edge => edge.color = this.SOLUTION_EDGE_COLOR);
-        // make the edges a bit smaller
-        //this.solutionEdges.forEach(edge => edge.width = this.SOLUTION_EDGE_WEIGHT);
-        
     }
 
 
