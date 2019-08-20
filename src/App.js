@@ -180,7 +180,7 @@ class App extends Component {
 
     runDijkstra() {
         const solution = dijkstra(this.graph, this.graph.nodes[0], this.graph.nodes[4]);
-        this.solutionEdges = this.copyEdges(solution);
+        this.solutionEdges = solution;
 	      console.log(this.solutionEdges)
 
         // Calculate total points (optimal path total weight)
@@ -190,9 +190,9 @@ class App extends Component {
 
 
         // set the edges' color
-        this.solutionEdges.forEach(edge => edge.color = this.SOLUTION_EDGE_COLOR);
+        //this.solutionEdges.forEach(edge => edge.color = this.SOLUTION_EDGE_COLOR);
         // make the edges a bit smaller
-        this.solutionEdges.forEach(edge => edge.width = this.SOLUTION_EDGE_WEIGHT);
+        //this.solutionEdges.forEach(edge => edge.width = this.SOLUTION_EDGE_WEIGHT);
         
     }
 
@@ -271,8 +271,10 @@ class App extends Component {
 
     // Displays a losing message, plus algorithm solution
     loseScreen() {
-        // Add the solution's edges to be displayed alongside the user's edges
-        this.graph.edges.concat(this.solutionEdges);
+        // set the solution edges' color
+        this.solutionEdges.forEach(edge => edge.color = this.SOLUTION_EDGE_COLOR);
+        // make the edges a bit smaller
+        this.solutionEdges.forEach(edge => edge.width = this.SOLUTION_EDGE_WEIGHT);
 
         // Display it
         return <div>
