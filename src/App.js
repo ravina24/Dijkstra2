@@ -6,6 +6,10 @@ import dijkstra from "./dijkstra";
 import Button from "react-bootstrap/Button";
 import Jumbotron from "react-bootstrap/Jumbotron";
 import GraphGenerator from './GraphGenerator';
+import Container from 'react-bootstrap/Container'
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
+
 
 class App extends Component {
 
@@ -166,15 +170,26 @@ class App extends Component {
 
     render() {
         return (
-            <Jumbotron>
             <div>
-                <h1>DIJKSTRA!!!</h1>
-                <h2>Start Node: {this.graph.nodes[0].label}</h2>
-                <h2>End Node: {this.graph.nodes[this.graph.nodes.length - 1].label}</h2>
-                <Graph getNetwork={this.setNetworkInstance} graph={this.graph} options={this.options} events={this.events}></Graph>
-                    <p>Points Available: {this.state.weight}</p>
-                    </div>
-            </Jumbotron>
+            <h1>DIJKSTRA</h1>
+              <Container>
+                <Row>
+                  <Col md="6">
+                    <div>
+                        <h2>Start Node: {this.graph.nodes[0].label}</h2>
+                        <h2>End Node: {this.graph.nodes[this.graph.nodes.length - 1].label}</h2>
+                        <Graph getNetwork={this.setNetworkInstance} graph={this.graph} options={this.options} events={this.events}></Graph>
+                            <p>Points Available: {this.state.weight}</p>
+                      </div>
+                  </Col>
+                  <Col md="6">
+                    <p>Welcome to the Dijkstra Visualization game. The Dijkstra algorithm was created by Edsger W. Dijkstra in 1956. This algorithm finds the shortest path in a graph given a start node and end node. The shortest path of a graph is defined as the path with minimum weight. The weight is calculated by adding up the weights of the individual edges in the path.</p>
+                    <p>Your goal is to find the shortest path in this graph by guessing which edges to click. To win, your path must match the shortest path found by the Dijkstra algorithm. To learn more about the Dijkstra algorithm, please watch this video:</p>
+                    <a href="https://www.youtube.com/watch?v=gdmfOwyQlcI">Dijkstra Algorithm Video</a>
+                  </Col>
+                </Row>
+              </Container>
+            </div>
         )
     }
 }
