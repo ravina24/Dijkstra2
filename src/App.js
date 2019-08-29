@@ -64,7 +64,6 @@ class App extends Component {
             win: false,
             lose: false,
             userPath: [],
-            dijkstraPath: [],
             currentNodeId: 0,
             lastSelectedEdgeId: -1,
         };
@@ -74,12 +73,14 @@ class App extends Component {
 
         console.log(this.graph);
 
-        this.runDijkstra();
+        this.runDijkstra(true);
 
         this.setNetworkInstance = this.setNetworkInstance.bind(this)
         this.handleClick = this.handleClick.bind(this);
         this.handleWin = this.handleWin.bind(this);
+	this.handleRestart = this.handleRestart.bind(this);
         this.handleLose = this.handleLose.bind(this);
+	this.regenerate = this.regenerate.bind(this);
     }
 
 
@@ -91,7 +92,7 @@ class App extends Component {
         return copy;
     }
 
-    runDijkstra() {
+    runDijkstra(isFromConstructor) {
         console.log(this.graph.nodes.length);
         console.log(this.graph.nodes[0]);
         console.log(this.graph.nodes[this.graph.nodes.length - 1]);
@@ -104,8 +105,23 @@ class App extends Component {
         this.solutionEdges.forEach(edge => {
             sum += edge.label;
         });
-
+	    if(isFromConstructor){
         this.state.weight = sum;
+	    }
+	    else{
+		    this.setState(
+{
+            weight: sum,
+            game_over: false,
+            win: false,
+            lose: false,
+            userPath: [],
+            currentNodeId: 0,
+            lastSelectedEdgeId: -1,
+        }
+		    );
+
+	    }
     }
 
 
@@ -165,30 +181,44 @@ class App extends Component {
             win: false,
             lose: false
         });
+
     }
 
+	regenerate(){
+		console.log("bla");
+new GraphGenerator().generateGraph(this.graph);
+
+        console.log(this.graph);
+
+		this.runDijkstra(false);
+		console.log(this.graph.nodes);
+		console.log(this.graph.edges);
+
+		this.network.setData({nodes : this.graph.nodes, edges : this.graph.edges});
+	}
 
     render() {
         return (
             <div>
-              <h1>DIJKSTRA</h1>
-                <Container>
-                  <Row>
-                    <Col md="8">
-                      <div>
-                          <h2>Start Node: {this.graph.nodes[0].label}</h2>
-                          <h2>End Node: {this.graph.nodes[this.graph.nodes.length - 1].label}</h2>
-                          <Graph getNetwork={this.setNetworkInstance} graph={this.graph} options={this.options} events={this.events}></Graph>
-                              <h2>Points Available: {this.state.weight}</h2>
-                        </div>
-                    </Col>
-                    <Col md="4">
-                      <p>Welcome to the Dijkstra Visualization game. The Dijkstra algorithm was created by Edsger W. Dijkstra in 1956. This algorithm finds the shortest path in a graph given a start node and end node. The shortest path of a graph is defined as the path with minimum weight. The weight is calculated by adding up the weights of the individual edges in the path.</p>
-                      <p>Your goal is to find the shortest path in this graph by guessing which edges to click. To win, your path must match the shortest path found by the Dijkstra algorithm. To learn more about the Dijkstra algorithm, please watch this video:</p>
-                      <a href="https://www.youtube.com/watch?v=gdmfOwyQlcI">Dijkstra Algorithm Video</a>
-                    </Col>
-                  </Row>
-                </Container>
+            <h1>DIJKSTRA</h1>
+              <Container>
+                <Row>
+                  <Col md="6">
+                    <div>
+                        <h2>Start Node: {this.graph.nodes[0].label}</h2>
+                        <h2>End Node: {this.graph.nodes[this.graph.nodes.length - 1].label}</h2>
+                        <Graph getNetwork={this.setNetworkInstance} graph={this.graph} options={this.options} events={this.events}></Graph>
+                            <p>Points Available: {this.state.weight}</p>
+                      </div>
+                  </Col>
+                  <Col md="6">
+                    <p>Welcome to the Dijkstra Visualization game. The Dijkstra algorithm was created by Edsger W. Dijkstra in 1956. This algorithm finds the shortest path in a graph given a start node and end node. The shortest path of a graph is defined as the path with minimum weight. The weight is calculated by adding up the weights of the individual edges in the path.</p>
+                    <p>Your goal is to find the shortest path in this graph by guessing which edges to click. To win, your path must match the shortest path found by the Dijkstra algorithm. To learn more about the Dijkstra algorithm, please watch this video:</p>
+                    <a href="https://www.youtube.com/watch?v=gdmfOwyQlcI">Dijkstra Algorithm Video</a>
+                  </Col>
+            	  </Row>
+            	  <Button variant="primary" onClick={() => this.regenerate()}>Push me</Button>
+              </Container>
             </div>
         )
     }
