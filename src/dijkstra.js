@@ -82,6 +82,8 @@ export default function dijkstra(graph, startVertex, endVertex) {
     visitedVertices[currentVertexId] = currentVertexId;
   }
 
+  console.log(previousVertices)
+
 
   var shortestPathNodes = backtrack(graph, previousVertices, startVertex, endVertex);
   var shortestPathEdges = getEdges(graph, shortestPathNodes);
@@ -113,6 +115,7 @@ function backtrack(graph, previousVertices, startVertex, endVertex) {
   var currentVertexId = endVertex.id;
   if(previousVertices[endVertex.id] != null || endVertex.id === startVertex.id) {
     while(currentVertexId != null) {
+      console.log(currentVertexId) // correct
       stack.push(currentVertexId);
       currentVertexId = previousVertices[currentVertexId];
     }
@@ -129,10 +132,9 @@ function getEdges(graph, nodeArray) {
   var edgesInPath = [];
   const edgesInGraph = graph.edges;
 
-
   for(var i = 0; i < nodeArray.length - 1; i++) {
     edgesInGraph.forEach((edge) => {
-      if (edge.from === nodeArray[i] && edge.to === nodeArray[i+1]) {
+      if ((edge.from === nodeArray[i] && edge.to === nodeArray[i+1]) || (edge.to === nodeArray[i] && edge.from === nodeArray[i+1])) {
         edgesInPath.push(edge);
       }
     });
