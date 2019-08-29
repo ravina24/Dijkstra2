@@ -61,7 +61,7 @@ class App extends Component {
             lose: false,
             userPath: [],
             dijkstraPath: [],
-            currentNodeId: 1,
+            currentNodeId: 0,
             lastSelectedEdgeId: -1,
         };
 
@@ -163,49 +163,12 @@ class App extends Component {
         });
     }
 
-    //winScreen() {
-    //    // Can make this fancier later
-    //    return <div><h1>You win!</h1>
-    //        <h6>Thanks for coming to my TED talk</h6></div>;
-    //}
-
-    // Displays a losing message, plus algorithm solution
-    //loseScreen() {
-    //    // set the solution edges' color
-    //    this.solutionEdges.forEach(edge => edge.color = this.SOLUTION_EDGE_COLOR);
-    //    // make the edges a bit smaller
-    //    this.solutionEdges.forEach(edge => edge.width = this.SOLUTION_EDGE_WEIGHT);
-    //
-    //    // Display it
-    //    return <div>
-    //        <h1>You lost!</h1>
-    //        <h3>You would've won if you went with the {this.SOLUTION_EDGE_COLOR} path:</h3>
-    //        <Graph getNetwork={this.setNetworkInstance} graph={this.graph} options={this.options} events={this.events} />
-    //    </div>;
-    //}
-
 
     render() {
-
-       // // game is over:
-       // if (this.state.gameOver) {
-       //     if (this.state.win) {
-       //         return this.winScreen();
-       //     } else if (this.state.lose) {
-       //         return this.loseScreen();
-       //     } else {
-       //         throw "PROBLEM: state.game_over is TRUE but both state.win and state.lose are FALSE!";
-       //     }
-       // }
-
-
-
-        // game is not over:
         return (
             <Jumbotron>
             <div>
                 <h1>DIJKSTRA!!!</h1>
-                <Button variant="outline-warning">Test Button</Button>
                 <h2>Start Node: {this.graph.nodes[0].label}</h2>
                 <h2>End Node: {this.graph.nodes[this.graph.nodes.length - 1].label}</h2>
                 <Graph getNetwork={this.setNetworkInstance} graph={this.graph} options={this.options} events={this.events}></Graph>
