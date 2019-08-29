@@ -75,7 +75,9 @@ class App extends Component {
         this.setNetworkInstance = this.setNetworkInstance.bind(this)
         this.handleClick = this.handleClick.bind(this);
         this.handleWin = this.handleWin.bind(this);
+	this.handleRestart = this.handleRestart.bind(this);
         this.handleLose = this.handleLose.bind(this);
+	this.regenerate = this.regenerate.bind(this);
     }
 
 
@@ -161,20 +163,32 @@ class App extends Component {
             win: false,
             lose: false
         });
+
     }
 
+	regenerate(){
+		console.log("bla");
+new GraphGenerator().generateGraph(this.graph);
+
+        console.log(this.graph);
+
+        this.runDijkstra();
+		console.log(this.graph.nodes);
+		console.log(this.graph.edges);
+
+		this.network.setData({nodes : this.graph.nodes, edges : this.graph.edges});
+	}
 
     render() {
         return (
-            <Jumbotron>
             <div>
                 <h1>DIJKSTRA!!!</h1>
                 <h2>Start Node: {this.graph.nodes[0].label}</h2>
                 <h2>End Node: {this.graph.nodes[this.graph.nodes.length - 1].label}</h2>
                 <Graph getNetwork={this.setNetworkInstance} graph={this.graph} options={this.options} events={this.events}></Graph>
                     <p>Points Available: {this.state.weight}</p>
-                    </div>
-            </Jumbotron>
+		    <Button variant="primary" onClick={() => this.regenerate()}>Push me</Button>
+	</div>
         )
     }
 }
