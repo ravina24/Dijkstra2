@@ -10,7 +10,7 @@ class App extends Component {
     SOLUTION_EDGE_COLOR = 'purple';
     SOLUTION_EDGE_WEIGHT = '5';
     GENERATED_GRAPH_NUMBER_OF_NODES = 10;
-    GENERATE_CUSTOM_GRAPH = true;
+    GENERATE_CUSTOM_GRAPH = false;
     GENERATED_GRAPH_CONNECTION_PROBABILITY = 0.12; // the actual probability is a bit higher than this.
     /*
       Actual probabiilty of connection between two nodes: 100% if their indices are adjacent, and 2*probability - probability*2 if not
@@ -26,11 +26,11 @@ class App extends Component {
 
     graph = {
         nodes: [
-            { id: 1, label: '1' },
-            { id: 2, label: '2' },
-            { id: 3, label: '3' },
-            { id: 4, label: '4' },
-            { id: 5, label: '5' }
+            { id: 1, label: 'A' },
+            { id: 2, label: 'B' },
+            { id: 3, label: 'C' },
+            { id: 4, label: 'D' },
+            { id: 5, label: 'E' }
         ],
         edges: [{ from: 1, to: 2, label: 5, id: 1 }, { from: 1, to: 3, label: 10, id: 2 }, { from: 2, to: 4, label: 8, id: 3 }, { from: 2, to: 5, label: 2, id: 4 }]
     };
@@ -189,11 +189,6 @@ class App extends Component {
         var sum = 0;
         this.solutionEdges.forEach(edge => sum += edge.label);
         this.state.weight = sum;
-
-        // set the edges' color
-        this.solutionEdges.forEach(edge => edge.color = this.SOLUTION_EDGE_COLOR);
-        // make the edges a bit smaller
-        this.solutionEdges.forEach(edge => edge.width = this.SOLUTION_EDGE_WEIGHT);
     }
 
 
@@ -207,8 +202,7 @@ class App extends Component {
 		    && this.state.lastSelectedEdgeId !== id){
       		this.network.clustering.updateEdge(id,{color: 'red'})
       		this.state.userPath.push({from : this.graph.edges[id-1].from, to : this.graph.edges[id-1].to})
-      		    //console.log(this.state.userPath);
-      		    //console.log(this.state.weight);
+
       		let nodeId = (from === this.state.currentNodeId) ? to : from;
       		console.log(nodeId)
       		console.log(this.state.currentNodeId + " state ");
@@ -301,6 +295,8 @@ class App extends Component {
         else return (
             <div>
                 <h1>DIJKSTRA!!!</h1>
+                <h2>Start Node: {this.graph.nodes[0].label}</h2>
+                <h2>End Node: {this.graph.nodes[this.graph.nodes.length-1].label}</h2>
                 <Graph getNetwork={this.setNetworkInstance} graph={this.graph} options={this.options} events={this.events}></Graph>
                 <p>Points Available: {this.state.weight}</p>
             </div>
