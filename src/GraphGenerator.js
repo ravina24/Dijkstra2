@@ -1,9 +1,9 @@
 class GraphGenerator {
     // Constants
-    SOLUTION_EDGE_COLOR = 'purple';
-    SOLUTION_EDGE_WEIGHT = '5';
+    SOLUTION_EDGE_COLOR = 'purple'; // unused
+    SOLUTION_EDGE_WEIGHT = '5'; // unused
     GENERATED_GRAPH_NUMBER_OF_NODES = 10;
-    GENERATE_CUSTOM_GRAPH = false;
+    GENERATE_CUSTOM_GRAPH = true;
     GENERATED_GRAPH_CONNECTION_PROBABILITY = 0.12; // the actual probability is a bit higher than this.
     /*
       Actual probabiilty of connection between two nodes: 100% if their indices are adjacent, and 2*probability - probability*2 if not

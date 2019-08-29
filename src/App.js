@@ -148,7 +148,7 @@ class App extends Component {
 
     handleLose() {
         // Optional:
-        alert("you lose!");
+        alert("you lose! solution shown in purple");
 
         console.log("updating solution edge");
         this.solutionEdges.forEach(solutionEdge => this.network.clustering.updateEdge(solutionEdge.id, { color: this.SOLUTION_EDGE_COLOR }));
