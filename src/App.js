@@ -5,22 +5,9 @@ import Graph from 'react-graph-vis';
 import dijkstra from "./dijkstra";
 import Button from "react-bootstrap/Button";
 import Jumbotron from "react-bootstrap/Jumbotron";
+import GraphGenerator from './GraphGenerator';
 
 class App extends Component {
-
-    // Constants
-    SOLUTION_EDGE_COLOR = 'purple';
-    SOLUTION_EDGE_WEIGHT = '5';
-    GENERATED_GRAPH_NUMBER_OF_NODES = 10;
-    GENERATE_CUSTOM_GRAPH = false;
-    GENERATED_GRAPH_CONNECTION_PROBABILITY = 0.12; // the actual probability is a bit higher than this.
-    /*
-      Actual probabiilty of connection between two nodes: 100% if their indices are adjacent, and 2*probability - probability*2 if not
-    */
-    GENERATED_GRAPH_MAX_EDGE_WEIGHT = 15;
-
-
-
 
     // "Global" variables
 
@@ -72,14 +59,17 @@ class App extends Component {
             game_over: false,
             win: false,
             lose: false,
-	    userPath: [],
-	    dijkstraPath: [],
-	    currentNodeId: 1,
+            userPath: [],
+            dijkstraPath: [],
+            currentNodeId: 1,
             lastSelectedEdgeId: -1,
         };
 
         // generate graph and run dijkstra to set solutionEdges global variable
-        this.generateGraph();
+        new GraphGenerator().generateGraph(this.graph);
+
+        console.log(this.graph);
+
         this.runDijkstra();
 
         this.setNetworkInstance = this.setNetworkInstance.bind(this)
@@ -88,138 +78,61 @@ class App extends Component {
         this.handleLose = this.handleLose.bind(this);
     }
 
-    // Used by generateNodes. Each node's ID matches its label.
-    generateNode(id){
-      return { id: id, label: id.toString() };
-    }
 
-    // Used by generateGraph
-    generateNodes(){
-      const num = this.GENERATED_GRAPH_NUMBER_OF_NODES;
-      const nodes = [];
-      var i;
-      for (i = 0; i < num; i++){
-        nodes.push(this.generateNode(i));
-      }
-      return nodes;
-    }
 
-    // used by generateEdge to generate a random edge weight in [1 .. GENERATED_GRAPH_MAX_EDGE_WEIGHT]
-    generateEdgeWeight(){
-      return Math.floor(Math.random() * this.GENERATED_GRAPH_MAX_EDGE_WEIGHT) + 1;
-    }
-
-    // Used by generateEdges
-    generateEdge(id1, id2, edgeId){
-      const weight = this.generateEdgeWeight();
-      console.log("WEIGHT:" + weight)
-      const edge = { from: id1, to: id2, label: weight, id: edgeId};
-      console.log("GENERATED EDGE: " + edge.toString());
-      return edge;
-    }
-
-    canAddEdge(id1, id2, edges){
-      // DEBUG:
-      if (id1 == id2) {
-        return false;
-      }
-      var canAdd = true;
-	    var i;
-      for (i = 0; i < edges.length; i++){
-        if ((edges[i].from === id1 && edges[i].to === id2) || (edges[i].from === id2 && edges[i].to === id1)){
-          canAdd = false;
-          break;
-        }
-      }
-      return canAdd;
-    }
-
-    // Used by generateGraph
-    generateEdges(nodes){
-      const edges = [];
-      // connect the nodes so the graph is connected
-      // Go from 1 -> end in a loop
-      var i;
-      var j;
-      var edgeId = 1;
-      for (i = 0; i < nodes.length-1; i++, edgeId++){
-          edges.push(this.generateEdge(i, i+1, edgeId));
-      }
-
-      // add extra edges to spice things up
-      // if a node is not connected to another node, connect them with random probability
-      for (i = 0; i < nodes.length; i++){
-          // add edge if the generated number is in range and 
-          for (j = 0; j < nodes.length; j++)
-          if (this.canAddEdge(i, j, edges)){
-            const r = Math.random(); // [0,1)
-            if (r < this.GENERATED_GRAPH_CONNECTION_PROBABILITY){
-              edges.push(this.generateEdge(i, j, edgeId));
-              edgeId++;
-            }
-          }
-      }
-
-      return edges;
-    }
-
-    generateGraph() {
-        const generatedNodes = this.generateNodes();
-        const generatedEdges = this.generateEdges(generatedNodes);
-
-        // Set the graph
-        if (this.GENERATE_CUSTOM_GRAPH){
-          this.graph = {
-            nodes: generatedNodes,
-            edges: generatedEdges
-          };
-        }
-    }
-
-    copyEdges(edges){
-      const copy = [];
-      var edgeId = this.graph.edges.length;
-      edges.forEach(e => copy.push({to: e.to, from: e.from, label: e.label, id: ++edgeId}));
-      return copy;
+    copyEdges(edges) {
+        const copy = [];
+        var edgeId = this.graph.edges.length;
+        edges.forEach(e => copy.push({ to: e.to, from: e.from, label: e.label, id: ++edgeId }));
+        return copy;
     }
 
     runDijkstra() {
-        const solution = dijkstra(this.graph, this.graph.nodes[0], this.graph.nodes[4]);
-        this.solutionEdges = this.copyEdges(solution);
-	      
+        console.log(this.graph.nodes.length);
+        console.log(this.graph.nodes[0]);
+        console.log(this.graph.nodes[this.graph.nodes.length - 1]);
+        this.solutionEdges = dijkstra(this.graph, this.graph.nodes[0], this.graph.nodes[this.graph.nodes.length - 1]);
+
+        console.log(this.solutionEdges);
+
         // Calculate total points (optimal path total weight)
         var sum = 0;
-        this.solutionEdges.forEach(edge => sum += edge.label);
+        this.solutionEdges.forEach(edge => {
+            sum += edge.label;
+        });
+
         this.state.weight = sum;
     }
 
 
 
     handleClick = id => {
-	    console.log(id)
-	    let from = this.graph.edges[id-1].from;
-	    let to = this.graph.edges[id-1].to;
-	    if((from === this.state.currentNodeId 
-		    || to === this.state.currentNodeId)
-		    && this.state.lastSelectedEdgeId !== id){
-      		this.network.clustering.updateEdge(id,{color: 'red'})
-      		this.state.userPath.push({from : this.graph.edges[id-1].from, to : this.graph.edges[id-1].to})
 
-      		let nodeId = (from === this.state.currentNodeId) ? to : from;
-      		console.log(nodeId)
-      		console.log(this.state.currentNodeId + " state ");
-      		this.setState({
-      			weight: this.state.weight - this.graph.edges[id-1].label,
-      			currentNodeId: nodeId,
-      			lastSelectedEdgeId: id,
-      		})
-      }
+        console.log(id);
 
-      if(this.state.weight == 0) {
-        this.handleWin();
-      } else if(this.state.weight < 0) {
-        this.handleLose();
-      }
+        let from = this.graph.edges[id - 1].from;
+        let to = this.graph.edges[id - 1].to;
+
+        if ((from === this.state.currentNodeId
+            || to === this.state.currentNodeId)
+            && this.state.lastSelectedEdgeId !== id) {
+
+            this.network.clustering.updateEdge(id, { color: 'red' });
+            this.state.userPath.push({ from: this.graph.edges[id - 1].from, to: this.graph.edges[id - 1].to })
+            let nodeId = (from === this.state.currentNodeId) ? to : from;
+            console.log(this.state.currentNodeId + " state ");
+            this.setState({
+                weight: this.state.weight - this.graph.edges[id - 1].label,
+                currentNodeId: nodeId,
+                lastSelectedEdgeId: id
+            });
+        }
+
+        if (this.state.weight === 0) {
+		setTimeout(() => {this.handleWin()}, 100);
+        } else if (this.state.weight < 0) {
+		setTimeout(() => {this.handleLose()}, 100);
+        }
     }
 
 
@@ -229,9 +142,9 @@ class App extends Component {
     };
 
     handleWin() {
-      // Optional:
-      alert("you won!");
-      
+        // Optional:
+        alert("you won!");
+
         this.setState({
             gameOver: true,
             win: true,
@@ -240,8 +153,8 @@ class App extends Component {
     }
 
     handleLose() {
-      // Optional:
-      alert("you lose!");
+        // Optional:
+        alert("you lose!");
 
         this.setState({
             gameOver: true,
@@ -254,8 +167,8 @@ class App extends Component {
     handleRestart() {
         this.setState({
             gameOver: false,
-            win : false,
-            lose : false
+            win: false,
+            lose: false
         })
     }
 
@@ -276,8 +189,8 @@ class App extends Component {
         return <div>
             <h1>You lost!</h1>
             <h3>You would've won if you went with the {this.SOLUTION_EDGE_COLOR} path:</h3>
-            <Graph getNetwork={this.setNetworkInstance} graph={this.graph} options={this.options} events={this.events}></Graph>
-        </div>
+            <Graph getNetwork={this.setNetworkInstance} graph={this.graph} options={this.options} events={this.events} />
+        </div>;
     }
 
 
@@ -299,7 +212,7 @@ class App extends Component {
                 <h1>DIJKSTRA!!!</h1>
                 <Button variant="outline-warning">Test Button</Button>
                 <h2>Start Node: {this.graph.nodes[0].label}</h2>
-                <h2>End Node: {this.graph.nodes[this.graph.nodes.length-1].label}</h2>
+                <h2>End Node: {this.graph.nodes[this.graph.nodes.length - 1].label}</h2>
                 <Graph getNetwork={this.setNetworkInstance} graph={this.graph} options={this.options} events={this.events}></Graph>
                 <p>Points Available: {this.state.weight}</p>
             </Jumbotron>
