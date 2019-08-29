@@ -10,7 +10,7 @@ import GraphGenerator from './GraphGenerator';
 class App extends Component {
 
     // "Global" variables
-
+    SOLUTION_EDGE_COLOR = 'purple';
     solutionEdges = {}; // from Dijkstra algorithm
 
     graph = {
@@ -138,29 +138,20 @@ class App extends Component {
 
 
     setNetworkInstance = nw => {
-        this.network = nw
+        this.network = nw;
     };
 
     handleWin() {
         // Optional:
         alert("you won!");
-
-        this.setState({
-            gameOver: true,
-            win: true,
-            lose: false
-        })
     }
 
     handleLose() {
         // Optional:
         alert("you lose!");
 
-        this.setState({
-            gameOver: true,
-            win: false,
-            lose: true
-        })
+        console.log("updating solution edge");
+        this.solutionEdges.forEach(solutionEdge => this.network.clustering.updateEdge(solutionEdge.id, { color: this.SOLUTION_EDGE_COLOR }));
     }
 
     // Unused atm
@@ -169,46 +160,49 @@ class App extends Component {
             gameOver: false,
             win: false,
             lose: false
-        })
+        });
     }
 
-    winScreen() {
-        // Can make this fancier later
-        return <div><h1>You win!</h1>
-            <h6>Thanks for coming to my TED talk</h6></div>;
-    }
+    //winScreen() {
+    //    // Can make this fancier later
+    //    return <div><h1>You win!</h1>
+    //        <h6>Thanks for coming to my TED talk</h6></div>;
+    //}
 
     // Displays a losing message, plus algorithm solution
-    loseScreen() {
-        // set the solution edges' color
-        this.solutionEdges.forEach(edge => edge.color = this.SOLUTION_EDGE_COLOR);
-        // make the edges a bit smaller
-        this.solutionEdges.forEach(edge => edge.width = this.SOLUTION_EDGE_WEIGHT);
-
-        // Display it
-        return <div>
-            <h1>You lost!</h1>
-            <h3>You would've won if you went with the {this.SOLUTION_EDGE_COLOR} path:</h3>
-            <Graph getNetwork={this.setNetworkInstance} graph={this.graph} options={this.options} events={this.events} />
-        </div>;
-    }
+    //loseScreen() {
+    //    // set the solution edges' color
+    //    this.solutionEdges.forEach(edge => edge.color = this.SOLUTION_EDGE_COLOR);
+    //    // make the edges a bit smaller
+    //    this.solutionEdges.forEach(edge => edge.width = this.SOLUTION_EDGE_WEIGHT);
+    //
+    //    // Display it
+    //    return <div>
+    //        <h1>You lost!</h1>
+    //        <h3>You would've won if you went with the {this.SOLUTION_EDGE_COLOR} path:</h3>
+    //        <Graph getNetwork={this.setNetworkInstance} graph={this.graph} options={this.options} events={this.events} />
+    //    </div>;
+    //}
 
 
     render() {
-        // game is over:
-        if (this.state.gameOver) {
-            if (this.state.win) {
-                return this.winScreen();
-            } else if (this.state.lose) {
-                return this.loseScreen();
-            } else {
-                throw "PROBLEM: state.game_over is TRUE but both state.win and state.lose are FALSE!";
-            }
-        }
+
+       // // game is over:
+       // if (this.state.gameOver) {
+       //     if (this.state.win) {
+       //         return this.winScreen();
+       //     } else if (this.state.lose) {
+       //         return this.loseScreen();
+       //     } else {
+       //         throw "PROBLEM: state.game_over is TRUE but both state.win and state.lose are FALSE!";
+       //     }
+       // }
+
+
 
         // game is not over:
         else return (
-            <Jumbotron>
+            <div>
                 <h1>DIJKSTRA!!!</h1>
                 <Button variant="outline-warning">Test Button</Button>
                 <h2>Start Node: {this.graph.nodes[0].label}</h2>
