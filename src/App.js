@@ -194,17 +194,19 @@ class App extends Component {
 
 
     handleClick = id => {
+
         console.log(id);
+
         let from = this.graph.edges[id - 1].from;
         let to = this.graph.edges[id - 1].to;
+
         if ((from === this.state.currentNodeId
             || to === this.state.currentNodeId)
             && this.state.lastSelectedEdgeId !== id) {
+
             this.network.clustering.updateEdge(id, { color: 'red' });
             this.state.userPath.push({ from: this.graph.edges[id - 1].from, to: this.graph.edges[id - 1].to })
-
             let nodeId = (from === this.state.currentNodeId) ? to : from;
-            console.log(nodeId);
             console.log(this.state.currentNodeId + " state ");
             this.setState({
                 weight: this.state.weight - this.graph.edges[id - 1].label,
@@ -214,9 +216,9 @@ class App extends Component {
         }
 
         if (this.state.weight === 0) {
-            this.handleWin();
+		setTimeout(() => {this.handleWin()}, 100);
         } else if (this.state.weight < 0) {
-            this.handleLose();
+		setTimeout(() => {this.handleLose()}, 100);
         }
     }
 
