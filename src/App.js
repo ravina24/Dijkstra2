@@ -201,14 +201,16 @@ class App extends Component {
 
 
         // game is not over:
-        else return (
+        return (
+            <Jumbotron>
             <div>
                 <h1>DIJKSTRA!!!</h1>
                 <Button variant="outline-warning">Test Button</Button>
                 <h2>Start Node: {this.graph.nodes[0].label}</h2>
                 <h2>End Node: {this.graph.nodes[this.graph.nodes.length - 1].label}</h2>
                 <Graph getNetwork={this.setNetworkInstance} graph={this.graph} options={this.options} events={this.events}></Graph>
-                <p>Points Available: {this.state.weight}</p>
+                    <p>Points Available: {this.state.weight}</p>
+                    </div>
             </Jumbotron>
         )
     }
