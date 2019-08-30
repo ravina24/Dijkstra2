@@ -31,7 +31,7 @@ class App extends Component {
 
     options = {
         height: "600",
-        width: "1000",
+        width: "700",
         interaction: { dragNodes: false, dragView: false, zoomView: false, selectable: false },
         physics: { enabled: false },
         layout: {
@@ -217,7 +217,7 @@ new GraphGenerator().generateGraph(this.graph);
                     <a href="https://www.youtube.com/watch?v=gdmfOwyQlcI">Dijkstra Algorithm Video</a>
                   </Col>
             	  </Row>
-            	  <Button variant="primary" onClick={() => this.regenerate()}>Push me</Button>
+            	  <Button variant="primary" onClick={() => this.regenerate()}>New Game</Button>
               </Container>
             </div>
         )
